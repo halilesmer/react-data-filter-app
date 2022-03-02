@@ -1,23 +1,49 @@
 import { useState } from "react";
+import * as React from "react";
+import TextField from "@mui/material/TextField";
+
+
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
+
+  
+
+
+
+
+
 
 const FilterBar = ({
   genders,
   colors,
-  onNameFilter,
+  onBrandFilter,
   onDescriptionFilter,
   onGenderFilter,
   onColorsFilter,
+  brand,
+  data,
   /* onDateFilter, */
 }) => {
+  const [selectedGender, setSelectedGender] = useState(null);
+
+  
+  
   const [filters, setFilters] = useState({
-    name: "",
+    brand: '',
     description: "",
     gender: "",
     color: "",
   });
+  console.log('filters: ', filters.brand);
 
   const handleInput = (field) => (event) => {
     const { value } = event.target;
+    setSelectedGender(value)
+    console.log("valuehandleInput: ", value);
 
     setFilters({
       ...filters,
@@ -25,8 +51,8 @@ const FilterBar = ({
     });
 
     switch (field) {
-      case "name":
-        onNameFilter(value);
+      case "brand":
+        onBrandFilter(value);
         break;
       case "description":
         onDescriptionFilter(value);
@@ -53,56 +79,89 @@ const FilterBar = ({
         <h4 className="border-bottom">Filters</h4>
       </div>
       <div className="col-sm-12 my-2">
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          className="form-control"
-          id="name"
-          value={filters.name}
-          onChange={handleInput("name")}
-        />
-      </div>
+        {/*  <Autocomplete
+          disablePortal
+          id="combo-box-demo"
+          options={data}
+          sx={{ width: 300 }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+            
+              label="Brand"
+              variant="outlined"
+            />
+          )}
+          getOptionLabel={(option) => option.brand}
 
-      <div className="col-sm-12 my-2">
-        <label htmlFor="description">Description</label>
-        <input
-          type="text"
-          className="form-control"
-          id="description"
-          onChange={handleInput("description")}
-        />
+        /> */}
+ 
       </div>
+      {/* -------- Search Input- Brand ----------- */}
+      <Box sx={{ minWidth: 130 }}>
+        <div className="col-sm-12 my-2">
+          <TextField
+            id="Brand"
+            label="Brand"
+            type="search"
+            fullWidth
+            value={filters.brand}
+            onChange={handleInput("brand")}
+            margin="dense"
+          />
+        </div>
+        {/* -------- Search Input- Description ----------- */}
+        <div className="col-sm-12 my-2">
+          <TextField
+            id="description"
+            label="Description"
+            type="search"
+            fullWidth
+            onChange={handleInput("description")}
+            margin="dense"
+          />
+        </div>
+        {/* -------- Gender Input Select ----------- */}
 
-      <div className="col-sm-12 my-2">
-        <label htmlFor="gender">Gender</label>
-        <select
-          className="form-control"
-          id="gender"
-          onChange={handleInput("gender")}
-        >
-          <option value="">All</option>
-          {genders.map((gender) => (
-            <option value={gender} key={gender}>
-              {gender}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="col-sm-12 my-2">
-        <label htmlFor="gender">All</label>
-        <select
-          className="form-control"
-          id="gender"
-          onChange={handleInput("color")}
-        >
-          <option value="">Select</option>
-          {colors.map((color) => (
-            <option value={color} key={color}>
-              {color}
-            </option>
-          ))}
-        </select>
-      </div>
+        <div className="col-sm-12 my-2">
+          <FormControl margin="dense" fullWidth>
+            <InputLabel id="gender-select">Gender</InputLabel>
+            <Select
+              labelId="gender-select"
+              id="gender"
+              value={selectedGender}
+              label="Gender"
+              onChange={handleInput("gender")}
+            >
+              {genders.map((gender) => (
+                <MenuItem value={gender} key={gender}>
+                  {gender}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
+
+        {/* -------- Color Select ----------- */}
+        <div className="col-sm-12 my-2">
+          <FormControl margin="dense" fullWidth>
+            <InputLabel id="color-select">Color</InputLabel>
+            <Select
+              labelId="color-select"
+              id="color"
+              value={selectedGender}
+              label="Color"
+              onChange={handleInput("color")}
+            >
+              {colors.map((color) => (
+                <MenuItem value={color} key={color}>
+                  {color}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
+      </Box>
 
       {/*  <div className="col-sm-12 my-2">
         <label htmlFor="startDate">From</label>
@@ -127,3 +186,74 @@ const FilterBar = ({
 };
 
 export default FilterBar;
+
+
+
+
+
+
+
+
+
+  /* -------- Gender Select ----------- */
+
+  /* <div className="col-sm-12 my-2">
+        <label htmlFor="gender">Gender</label>
+        <select
+          className="form-control"
+          id="gender"
+          onChange={handleInput("gender")}
+        >
+          <option value="">All</option>
+          {genders.map((gender) => (
+            <option value={gender} key={gender}>
+              {gender}
+            </option>
+          ))}
+        </select>
+      </div> */
+
+
+
+
+
+        /* -------- Color Select ----------- */
+
+      /*  <div className="col-sm-12 my-2">
+         <label htmlFor="gender">All</label>
+         <select
+           className="form-control"
+           id="gender"
+           onChange={handleInput("color")}
+         >
+           <option value="">Select</option>
+           {colors.map((color) => (
+             <option value={color} key={color}>
+               {color}
+             </option>
+           ))}
+         </select>
+       </div>; */
+
+        /* -------- Search Description ----------- */
+
+        /* <label htmlFor="description">Description</label>
+        <input
+          type="text"
+          className="form-control"
+          id="description"
+          onChange={handleInput("description")}
+        /> */
+
+        /* 
+                -------- Search Input- Brand ----------- 
+
+        <label htmlFor="brand">Brand</label>
+        <input
+          type="text"
+          className="form-control"
+          id="brand"
+          value={filters.brand}
+          onChange={handleInput("brand")}
+        />
+        */

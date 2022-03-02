@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import dayjs from "dayjs";
 
 import "./App.css";
 import PersonItem from "./components/PersonItem";
@@ -7,12 +6,10 @@ import PersonItem from "./components/PersonItem";
 import FilterBar from "./components/FilterBar";
 import useFetch from "./useFetch";
 
-const isSameOrAfter = require("dayjs/plugin/isSameOrAfter");
+/* const isSameOrAfter = require("dayjs/plugin/isSameOrAfter");
 const isSameOrBefore = require("dayjs/plugin/isSameOrBefore");
 dayjs.extend(isSameOrBefore);
-dayjs.extend(isSameOrAfter);
-
-
+dayjs.extend(isSameOrAfter); */
 
 function App() {
   //const [allData, setAllData] = useState(data);
@@ -20,48 +17,56 @@ function App() {
   const [printData, setPrintData] = useState(allData);
   const [genderJson, setGenderJson] = useState([]);
   const [colorJson, setColorJson] = useState([]);
-  
+  const [brand, setBrand] = useState([]);
+
   const { get } = useFetch("http://localhost:3000/");
-  
+
   /* -------------- Products Json -------------- */
   useEffect(() => {
     get("products_get_product_filter")
-    .then((data) => {
-      setAllData(data.data);
-      setPrintData(data.data);
-      setColorJson(data.data);
-    })
-    .catch((error) => console.log("Could not load product details", error));
+      .then((data) => {
+        setAllData(data.data);
+        setPrintData(data.data);
+        setColorJson(data.data);
+        setBrand(data.data);
+      })
+      .catch((error) => console.log("Could not load product details", error));
+
+
   }, []);
+
+
+
   /* -------------- Gender Json -------------- */
   useEffect(() => {
     get("common_get_gender")
-    .then((data) => {
-      setGenderJson(data.data);
-    })
-    .catch((error) => console.log("Could not load product details", error));
+      .then((data) => {
+        setGenderJson(data.data);
+      })
+      .catch((error) => console.log("Could not load product details", error));
   }, []);
   /* -------------- Color Json -------------- */
-  
-  
-  
-  
+
+  const generateBrandsDataForDropdown = () => {
+    return [...new Set(brand.map((item) => item.brand))];
+  };
+
   const generateGenderDataForDropdown = () => {
     /* return [...new Set(gender.map((item) => item.sex))]; */
     return [...new Set(genderJson.map((item) => item.sex.toUpperCase()))];
   };
-  
+
   const generateColorDataForDropdown = () => {
     /* return [...new Set(gender.map((item) => item.sex))]; */
     return [
       ...new Set(colorJson.map((item) => item.primary_color.toUpperCase())),
     ];
   };
-  
-  const handleFilterName = (name) => {
+
+  const handleFilterBrand = (brand) => {
     const filteredData = allData.filter((item) => {
-      const fullName = `${item.brand} ${item.product_name}`;
-      if (fullName.toLowerCase().includes(name.toLowerCase())) {
+     // const fullBrand = `${item.brand}`;
+      if (item.brand.toLowerCase().includes(brand.toLowerCase())) {
         return item;
       }
     });
@@ -90,7 +95,6 @@ function App() {
     });
 
     setPrintData(filteredData);
-    console.log("printData: ", printData);
   };
 
   const handleFilterColors = (color) => {
@@ -101,7 +105,6 @@ function App() {
     });
 
     setPrintData(filteredData);
-    console.log("printData: ", printData);
   };
 
   /*  const handleFilterDate = (date, field) => {
@@ -121,11 +124,12 @@ function App() {
           <FilterBar
             genders={generateGenderDataForDropdown()}
             colors={generateColorDataForDropdown()}
-            onNameFilter={handleFilterName}
+            onBrandFilter={handleFilterBrand}
             onDescriptionFilter={handleFilterDescription}
             onColorsFilter={handleFilterColors}
             onGenderFilter={handleFilterGender}
-
+            brand={generateBrandsDataForDropdown()}
+            data={allData}
             /*  onDateFilter={handleFilterDate} */
           />
         </div>
