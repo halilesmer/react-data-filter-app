@@ -31,11 +31,7 @@ function App() {
         setBrand(data.data);
       })
       .catch((error) => console.log("Could not load product details", error));
-
-
   }, []);
-
-
 
   /* -------------- Gender Json -------------- */
   useEffect(() => {
@@ -63,9 +59,10 @@ function App() {
     ];
   };
 
+  /* -------- Search Input Brand Function----------- */
   const handleFilterBrand = (brand) => {
     const filteredData = allData.filter((item) => {
-     // const fullBrand = `${item.brand}`;
+      // const fullBrand = `${item.brand}`;
       if (item.brand.toLowerCase().includes(brand.toLowerCase())) {
         return item;
       }
@@ -73,7 +70,8 @@ function App() {
 
     setPrintData(filteredData);
   };
-  /* email chainged to description */
+
+  /* -------- Search Input Description Function----------- */
   const handleFilterDescription = (description) => {
     const filteredData = allData.filter((item) => {
       if (
@@ -87,6 +85,8 @@ function App() {
 
     setPrintData(filteredData);
   };
+
+  /* -------- Search Select Gender Function----------- */
   const handleFilterGender = (gender) => {
     const filteredData = allData.filter((item) => {
       if (item.product_sex.toLowerCase() === gender.toLowerCase()) {
@@ -97,6 +97,7 @@ function App() {
     setPrintData(filteredData);
   };
 
+  /* -------- Search Select Color Function----------- */
   const handleFilterColors = (color) => {
     const filteredData = allData.filter((item) => {
       if (item.primary_color.toLowerCase() === color.toLowerCase()) {
