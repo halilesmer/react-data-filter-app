@@ -6,7 +6,6 @@ import {
   MenuItem,
   InputLabel,
   Box,
-  TextField,
 } from "@mui/material";
 
 
@@ -22,9 +21,10 @@ const FilterBar = ({
   colors,
   onBrandFilter,
   onDescriptionFilter,
+
   onGenderFilter,
   onColorsFilter,
-  brand,
+  brands,
   data,
   /* onDateFilter, */
 }) => {
@@ -34,16 +34,15 @@ const FilterBar = ({
   
   const [filters, setFilters] = useState({
     brand: '',
-    description: "",
     gender: "",
     color: "",
   });
-  console.log('filters: ', filters.brand);
+
 
   const handleInput = (field) => (event) => {
     const { value } = event.target;
-    setSelectedGender(value)
-    console.log("valuehandleInput: ", value);
+   // setSelectedGender(value)
+
 
     setFilters({
       ...filters,
@@ -54,9 +53,7 @@ const FilterBar = ({
       case "brand":
         onBrandFilter(value);
         break;
-      case "description":
-        onDescriptionFilter(value);
-        break;
+
       case "gender":
         onGenderFilter(value);
         break;
@@ -95,41 +92,41 @@ const FilterBar = ({
           getOptionLabel={(option) => option.brand}
 
         /> */}
- 
       </div>
       {/* -------- Search Input- Brand ----------- */}
       <Box sx={{ minWidth: 130 }}>
         <div className="col-sm-12 my-2">
-          <TextField
-            id="Brand"
-            label="Brand"
-            type="search"
-            fullWidth
-            value={filters.brand}
-            onChange={handleInput("brand")}
-            margin="dense"
-          />
+          <FormControl margin="dense" fullWidth >
+            <InputLabel id="brand-select">Brand</InputLabel>
+            <Select
+              defaultValue={"brand"}
+              displayEmpty
+              labelId="brand-select"
+              id="brand"
+              label="Brand"
+              value={filters.brand}
+              onChange={handleInput("brand")}
+            >
+              <MenuItem value='all'>All</MenuItem>
+              {brands.map((brand) => (
+                <MenuItem value={brand} key={brand}>
+                  {brand}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
-        {/* -------- Search Input- Description ----------- */}
-        <div className="col-sm-12 my-2">
-          <TextField
-            id="description"
-            label="Description"
-            type="search"
-            fullWidth
-            onChange={handleInput("description")}
-            margin="dense"
-          />
-        </div>
+
         {/* -------- Gender Input Select ----------- */}
 
         <div className="col-sm-12 my-2">
           <FormControl margin="dense" fullWidth>
             <InputLabel id="gender-select">Gender</InputLabel>
             <Select
+              defaultValue={""}
               labelId="gender-select"
               id="gender"
-              value={selectedGender}
+              value={filters.gender}
               label="Gender"
               onChange={handleInput("gender")}
             >
@@ -147,9 +144,10 @@ const FilterBar = ({
           <FormControl margin="dense" fullWidth>
             <InputLabel id="color-select">Color</InputLabel>
             <Select
+              defaultValue={""}
               labelId="color-select"
               id="color"
-              value={selectedGender}
+              value={filters.color}
               label="Color"
               onChange={handleInput("color")}
             >
@@ -245,7 +243,7 @@ export default FilterBar;
           onChange={handleInput("description")}
         /> */
 
-        /* 
+        /*
                 -------- Search Input- Brand ----------- 
 
         <label htmlFor="brand">Brand</label>
@@ -257,3 +255,13 @@ export default FilterBar;
           onChange={handleInput("brand")}
         />
         */
+       
+        /*  <TextField
+            fullWidth
+            id="Brand"
+            label="Brand"
+            type="search"
+            value={filters.brand}
+            onChange={handleInput("brand")}
+            margin="dense"
+          /> */
