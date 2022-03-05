@@ -96,10 +96,10 @@ const FilterBar = ({
       {/* -------- Search Input- Brand ----------- */}
       <Box sx={{ minWidth: 130 }}>
         <div className="col-sm-12 my-2">
-          <FormControl margin="dense" fullWidth >
+          <FormControl margin="dense" fullWidth>
             <InputLabel id="brand-select">Brand</InputLabel>
             <Select
-              defaultValue={"brand"}
+              defaultValue={"all"}
               displayEmpty
               labelId="brand-select"
               id="brand"
@@ -107,9 +107,11 @@ const FilterBar = ({
               value={filters.brand}
               onChange={handleInput("brand")}
             >
-              <MenuItem value='all'>All</MenuItem>
+              <MenuItem  value="all">
+                All
+              </MenuItem>
               {brands.map((brand) => (
-                <MenuItem value={brand} key={brand}>
+                <MenuItem  value={brand} key={brand}>
                   {brand}
                 </MenuItem>
               ))}
@@ -123,13 +125,14 @@ const FilterBar = ({
           <FormControl margin="dense" fullWidth>
             <InputLabel id="gender-select">Gender</InputLabel>
             <Select
-              defaultValue={""}
+              
               labelId="gender-select"
               id="gender"
               value={filters.gender}
               label="Gender"
               onChange={handleInput("gender")}
             >
+              <MenuItem value="all">All</MenuItem>
               {genders.map((gender) => (
                 <MenuItem value={gender} key={gender}>
                   {gender}

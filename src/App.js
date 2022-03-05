@@ -12,30 +12,30 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(isSameOrAfter); */
 
 function App() {
-  
   const [allData, setAllData] = useState(null);
-  
+
   const [genderJson, setGenderJson] = useState([]);
   //const [colorJson, setColorJson] = useState([]);
   const [brand, setBrand] = useState([]);
-  
-  
+
   const [searchedBrandOutcome, setSearchedBrandOutcome] = useState([]);
   const [searchedGenderOutcome, setSearchedGenderOutcome] = useState([]);
-  
- /*  const [selectedGenderOutcome, setSelectedGenderOutcome] = useState([]);
-  const [selectedColorOutcome, setSelectedColorOutcome] = useState([]); */
 
-  
+  const [selectedBrand, setSelectedBrand] = useState("");
+
+  const [selectedGender, setSelectedGender] = useState("");
+
   const [printData, setPrintData] = useState([]);
+
   /* const [mergeData, setMergeData] = useState([
     { ...searchedBrandOutcome },
     { ...searchedDescriptionOutcome },
   ]); */
   /* -------------- SetPrint --------------------------- */
   useEffect(() => {
-   setPrintData([...searchedBrandOutcome, ...searchedGenderOutcome]);
- },[searchedBrandOutcome, searchedGenderOutcome])
+    setPrintData([...searchedBrandOutcome, ...searchedGenderOutcome]);
+    console.log("searchedGenderOutcome-1: ", searchedGenderOutcome);
+  }, [searchedBrandOutcome, searchedGenderOutcome]);
 
   const { get } = useFetch("http://localhost:3000/");
 
@@ -70,37 +70,39 @@ function App() {
     if (printData.length <= 0) {
       return [...new Set(genderJson?.map((item) => item?.sex?.toUpperCase()))];
     } else {
-      return [...new Set(printData?.map((item) => item?.product_sex?.toUpperCase()))];
+      return [
+        ...new Set(printData?.map((item) => item?.product_sex?.toUpperCase())),
+      ];
     }
   };
 
   const generateColorDataForDropdown = () => {
     /* return [...new Set(gender.map((item) => item.sex))]; */
-    return   printData.length <= 0
-         ? [
-             ...new Set(
-               allData?.map((item) => item?.primary_color?.toUpperCase())
-             ),
-           ]
-         : [
-             ...new Set(
-               printData?.map((item) => item?.primary_color?.toUpperCase())
-             ),
-           ];
-         };
+    return printData.length <= 0
+      ? [...new Set(allData?.map((item) => item?.primary_color?.toUpperCase()))]
+      : [
+          ...new Set(
+            printData?.map((item) => item?.primary_color?.toUpperCase())
+          ),
+        ];
+  };
 
-          /* -------- Search Input Brand Function----------- */
-      const handleFilterBrand = (brand) => {
-    const filteredData = searchedGenderOutcome.length === 0 || brand === 'all' ?
-          allData.filter((item) => item?.brand?.toLowerCase().includes(brand.toLowerCase()))
-        :
-          printData.filter((item) => item?.brand?.toLowerCase().includes(brand?.toLowerCase()));  
+  /* -------- Search Input Brand Function----------- */
+  const handleFilterBrand = (brand) => {
+    setSelectedBrand(brand);
+    const filteredData =
+      searchedGenderOutcome.length === 0 || brand === "all"
+        ? allData.filter(
+            (item) => item?.brand?.toLowerCase() === brand?.toLowerCase()
+          )
+        : printData.filter(
+            (item) => item?.brand?.toLowerCase() === brand?.toLowerCase()
+          );
 
-      setSearchedBrandOutcome([...filteredData]);
-    } 
+    setSearchedBrandOutcome([...filteredData]);
+  };
 
-
-    /* const filteredData =
+  /* const filteredData =
       printData.length === 0 ? allData.filter(item => item?.brand?.toLowerCase().includes(brand.toLowerCase()))
       
         :
@@ -117,29 +119,31 @@ function App() {
       
     } */
 
-
- 
-
   /* -------- Search Select Gender Function----------- */
-  const handleFilterGender = (gender) => {
-    const filteredData =
-      printData.length === 0
-        ? allData.filter((item) =>
-            item?.product_sex?.toLowerCase().includes(gender.toLowerCase())
-          )
-        : printData.filter((item) =>
-            item?.gender?.toLowerCase().includes(gender?.toLowerCase())
-          );
+  const handleFilterGender = (genders) => {
+    setSelectedGender(genders);
 
-    setSearchedGenderOutcome([...filteredData]);
+    const filteredData =
+      selectedBrand === "all" || selectedBrand === ""
+        ? allData.filter(
+            (item) =>
+              //item?.product_sex?.toLowerCase().includes(genders.toLowerCase())
+              item?.product_sex?.toLowerCase() === genders.toLowerCase()
+          )
+        : printData &&
+          printData.filter(
+            (item) => item?.product_sex?.toLowerCase() === genders.toLowerCase()
+          );
     
+    setSearchedGenderOutcome([...filteredData]);
+    console.log("filteredData-gender: ", filteredData);
+
     /*  const filteredData =
       printData.length === 0 ? allData.filter((item) => item?.product_sex?.toLowerCase().includes(gender.toLowerCase()))
         :
         printData.filter((item) => item?.gender?.toLowerCase().includes(gender?.toLowerCase()));
    
     setPrintData([...printData, ...filteredData ]); */
- 
   };
 
   /* -------- Search Select Color Function----------- */
@@ -149,8 +153,8 @@ function App() {
         return item;
       }
     });
-      // setPrintData([{...searchedBrandOutcome},{...filteredData}]);
- }
+    // setPrintData([{...searchedBrandOutcome},{...filteredData}]);
+  };
 
   /*  const handleFilterDate = (date, field) => {
     const filteredData = allData.filter((item) => {
@@ -161,7 +165,6 @@ function App() {
 
     setPrintData(filteredData);
   }; */
-
 
   /*  useEffect(() => {
      if (searchedBrandOutcome.length >= 1) {
@@ -176,9 +179,9 @@ function App() {
      selectedColorOutcome,
      selectedGenderOutcome,
    ]); */
-  
+
   console.log("printData: ", printData);
-  
+  console.log("searchedGenderOutcome-2: ", searchedGenderOutcome);
 
   return (
     <div className="container">
@@ -198,20 +201,15 @@ function App() {
         </div>
         <div className="col-sm-9">
           <div className="row mt-5">
-            {
-              printData.length === 0 
-            ?
-              allData &&
-              allData.map((item, index) => (
-                <PersonItem item={item} key={index} />
-              ))
-            :
-              printData &&
-              printData.map((item, index) => (
-                <PersonItem item={item} key={index} />
-              ))
-            
-            }
+            {printData.length === 0
+              ? allData &&
+                allData.map((item, index) => (
+                  <PersonItem item={item} key={index} />
+                ))
+              : printData &&
+                printData.map((item, index) => (
+                  <PersonItem item={item} key={index} />
+                ))}
           </div>
         </div>
       </div>
