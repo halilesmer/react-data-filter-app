@@ -1,73 +1,45 @@
 import * as React from "react";
-import { useState } from "react";
-import {
-  Select,
-  FormControl,
-  MenuItem,
-  InputLabel,
-  Box,
-} from "@mui/material";
-
-
-  
-
-
-
-
-
+import { Select, FormControl, MenuItem, InputLabel, Box } from "@mui/material";
 
 const FilterBar = ({
   genders,
-  colors,
-  onBrandFilter,
-  onDescriptionFilter,
+  onFilter,
+  /* onDescriptionFilter, */
 
-  onGenderFilter,
-  onColorsFilter,
+  /* onGenderFilter,
+  onColorsFilter, */
   brands,
-  data,
+  /* data, */
   /* onDateFilter, */
 }) => {
-  const [selectedGender, setSelectedGender] = useState(null);
+ 
 
-  
-  
-  const [filters, setFilters] = useState({
-    brand: '',
-    gender: "",
-    color: "",
-  });
 
 
   const handleInput = (field) => (event) => {
+    //const { brand, gender } = filters;
     const { value } = event.target;
-   // setSelectedGender(value)
+    
 
+    const brand = field === 'brand' ? value.toLowerCase() : ''
+    const gender = field === "gender" ? value.toLowerCase() : "";
 
-    setFilters({
-      ...filters,
-      [field]: value,
-    });
+      /* setFilters({
+        ...filters,
+        [field]: value,
+      }); */
+      
 
-    switch (field) {
-      case "brand":
-        onBrandFilter(value);
-        break;
+      onFilter(brand, gender);
 
-      case "gender":
-        onGenderFilter(value);
+    /* switch (field) {
+      case "brand"|| 'gender':
+        onFilter(brand, gender);
         break;
-      case "color":
-        onColorsFilter(value);
-        break;
-      /* case "from":
-        onDateFilter(value, "from");
-        break;
-      case "to":
-        break; */
-      default:
-        break;
-    }
+        default:
+          break;
+        } */
+      
   };
 
   return (
@@ -76,22 +48,7 @@ const FilterBar = ({
         <h4 className="border-bottom">Filters</h4>
       </div>
       <div className="col-sm-12 my-2">
-        {/*  <Autocomplete
-          disablePortal
-          id="combo-box-demo"
-          options={data}
-          sx={{ width: 300 }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-            
-              label="Brand"
-              variant="outlined"
-            />
-          )}
-          getOptionLabel={(option) => option.brand}
-
-        /> */}
+      
       </div>
       {/* -------- Search Input- Brand ----------- */}
       <Box sx={{ minWidth: 130 }}>
@@ -103,15 +60,14 @@ const FilterBar = ({
               displayEmpty
               labelId="brand-select"
               id="brand"
+              name="brand"
               label="Brand"
-              value={filters.brand}
+              //value={filters.brand}
               onChange={handleInput("brand")}
             >
-              <MenuItem  value="all">
-                All
-              </MenuItem>
+              <MenuItem value="all">All</MenuItem>
               {brands.map((brand) => (
-                <MenuItem  value={brand} key={brand}>
+                <MenuItem value={brand} key={brand}>
                   {brand}
                 </MenuItem>
               ))}
@@ -125,10 +81,10 @@ const FilterBar = ({
           <FormControl margin="dense" fullWidth>
             <InputLabel id="gender-select">Gender</InputLabel>
             <Select
-              
               labelId="gender-select"
               id="gender"
-              value={filters.gender}
+             // value={filters.gender}
+              defaultValue={'all'}
               label="Gender"
               onChange={handleInput("gender")}
             >
@@ -143,7 +99,7 @@ const FilterBar = ({
         </div>
 
         {/* -------- Color Select ----------- */}
-        <div className="col-sm-12 my-2">
+        {/*   <div className="col-sm-12 my-2">
           <FormControl margin="dense" fullWidth>
             <InputLabel id="color-select">Color</InputLabel>
             <Select
@@ -160,8 +116,8 @@ const FilterBar = ({
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>
-        </div>
+          </FormControl> 
+        </div>*/}
       </Box>
 
       {/*  <div className="col-sm-12 my-2">
@@ -188,17 +144,9 @@ const FilterBar = ({
 
 export default FilterBar;
 
+/* -------- Gender Select ----------- */
 
-
-
-
-
-
-
-
-  /* -------- Gender Select ----------- */
-
-  /* <div className="col-sm-12 my-2">
+/* <div className="col-sm-12 my-2">
         <label htmlFor="gender">Gender</label>
         <select
           className="form-control"
@@ -214,13 +162,9 @@ export default FilterBar;
         </select>
       </div> */
 
+/* -------- Color Select ----------- */
 
-
-
-
-        /* -------- Color Select ----------- */
-
-      /*  <div className="col-sm-12 my-2">
+/*  <div className="col-sm-12 my-2">
          <label htmlFor="gender">All</label>
          <select
            className="form-control"
@@ -236,9 +180,9 @@ export default FilterBar;
          </select>
        </div>; */
 
-        /* -------- Search Description ----------- */
+/* -------- Search Description ----------- */
 
-        /* <label htmlFor="description">Description</label>
+/* <label htmlFor="description">Description</label>
         <input
           type="text"
           className="form-control"
@@ -246,7 +190,7 @@ export default FilterBar;
           onChange={handleInput("description")}
         /> */
 
-        /*
+/*
                 -------- Search Input- Brand ----------- 
 
         <label htmlFor="brand">Brand</label>
@@ -258,8 +202,8 @@ export default FilterBar;
           onChange={handleInput("brand")}
         />
         */
-       
-        /*  <TextField
+
+/*  <TextField
             fullWidth
             id="Brand"
             label="Brand"

@@ -6,36 +6,13 @@ import PersonItem from "./components/PersonItem";
 import FilterBar from "./components/FilterBar";
 import useFetch from "./useFetch";
 
-/* const isSameOrAfter = require("dayjs/plugin/isSameOrAfter");
-const isSameOrBefore = require("dayjs/plugin/isSameOrBefore");
-dayjs.extend(isSameOrBefore);
-dayjs.extend(isSameOrAfter); */
-
 function App() {
   const [allData, setAllData] = useState(null);
 
   const [genderJson, setGenderJson] = useState([]);
-  //const [colorJson, setColorJson] = useState([]);
   const [brand, setBrand] = useState([]);
 
-  const [searchedBrandOutcome, setSearchedBrandOutcome] = useState([]);
-  const [searchedGenderOutcome, setSearchedGenderOutcome] = useState([]);
-
-  const [selectedBrand, setSelectedBrand] = useState("");
-
-  const [selectedGender, setSelectedGender] = useState("");
-
   const [printData, setPrintData] = useState([]);
-
-  /* const [mergeData, setMergeData] = useState([
-    { ...searchedBrandOutcome },
-    { ...searchedDescriptionOutcome },
-  ]); */
-  /* -------------- SetPrint --------------------------- */
-  useEffect(() => {
-    setPrintData([...searchedBrandOutcome, ...searchedGenderOutcome]);
-    console.log("searchedGenderOutcome-1: ", searchedGenderOutcome);
-  }, [searchedBrandOutcome, searchedGenderOutcome]);
 
   const { get } = useFetch("http://localhost:3000/");
 
@@ -44,8 +21,6 @@ function App() {
     get("products_get_product_filter")
       .then((data) => {
         setAllData(data.data);
-
-        //setColorJson(data.data);
         setBrand(data.data);
       })
       .catch((error) => console.log("Could not load product details", error));
@@ -66,7 +41,6 @@ function App() {
   };
 
   const generateGenderDataForDropdown = () => {
-    /* return [...new Set(gender.map((item) => item.sex))]; */
     if (printData.length <= 0) {
       return [...new Set(genderJson?.map((item) => item?.sex?.toUpperCase()))];
     } else {
@@ -88,100 +62,59 @@ function App() {
   };
 
   /* -------- Search Input Brand Function----------- */
-  const handleFilterBrand = (brand) => {
+  /* const handleFilterBrand = (brand) => {
     setSelectedBrand(brand);
-    const filteredData =
-      searchedGenderOutcome.length === 0 || brand === "all"
-        ? allData.filter(
-            (item) => item?.brand?.toLowerCase() === brand?.toLowerCase()
-          )
-        : printData.filter(
-            (item) => item?.brand?.toLowerCase() === brand?.toLowerCase()
-          );
 
-    setSearchedBrandOutcome([...filteredData]);
-  };
+    if (searchedGenderOutcome.length === 0 || brand === "all") {
+      setSearchedBrandOutcome([]);
 
-  /* const filteredData =
-      printData.length === 0 ? allData.filter(item => item?.brand?.toLowerCase().includes(brand.toLowerCase()))
-      
-        :
-        printData.filter(item => item?.brand?.toLowerCase().includes(brand?.toLowerCase()));
+      return setSearchedBrandOutcome([
+        ...allData.filter(
+          (item) => item?.brand?.toLowerCase() === brand?.toLowerCase()
+        ),
+      ]);
+    } else if (searchedGenderOutcome.length >= 1 && selectedGender === "all") {
+      setSearchedBrandOutcome([]);
 
-    if (filteredData.length === 0) {
-        return false
-    } else {
-      
-       setPrintData([
-          ...printData,
-          ...filteredData,
-       ]);
-      
-    } */
+      return setSearchedBrandOutcome([
+        ...printData.filter(
+          (item) => item?.brand?.toLowerCase() === brand?.toLowerCase()
+        ),
+      ]);
+    }
 
-  /* -------- Search Select Gender Function----------- */
-  const handleFilterGender = (genders) => {
-    setSelectedGender(genders);
-
-    const filteredData =
-      selectedBrand === "all" || selectedBrand === ""
-        ? allData.filter(
-            (item) =>
-              //item?.product_sex?.toLowerCase().includes(genders.toLowerCase())
-              item?.product_sex?.toLowerCase() === genders.toLowerCase()
-          )
-        : printData &&
-          printData.filter(
-            (item) => item?.product_sex?.toLowerCase() === genders.toLowerCase()
-          );
-    
-    setSearchedGenderOutcome([...filteredData]);
-    console.log("filteredData-gender: ", filteredData);
-
-    /*  const filteredData =
-      printData.length === 0 ? allData.filter((item) => item?.product_sex?.toLowerCase().includes(gender.toLowerCase()))
-        :
-        printData.filter((item) => item?.gender?.toLowerCase().includes(gender?.toLowerCase()));
-   
-    setPrintData([...printData, ...filteredData ]); */
-  };
-
-  /* -------- Search Select Color Function----------- */
-  const handleFilterColors = (color) => {
-    const filteredData = allData.filter((item) => {
-      if (item.primary_color.toLowerCase() === color.toLowerCase()) {
-        return item;
-      }
-    });
-    // setPrintData([{...searchedBrandOutcome},{...filteredData}]);
-  };
-
-  /*  const handleFilterDate = (date, field) => {
-    const filteredData = allData.filter((item) => {
-      if (field === "from" && dayjs(item.date).isSameOrAfter(dayjs(date))) {
-        return item;
-      }
-    });
-
-    setPrintData(filteredData);
   }; */
 
-  /*  useEffect(() => {
-     if (searchedBrandOutcome.length >= 1) {
-       setPrintData([
-         { ...searchedBrandOutcome },
-         { ...searchedDescriptionOutcome },
-       ]);
-     }
-   }, [
-     searchedBrandOutcome,
-     searchedDescriptionOutcome,
-     selectedColorOutcome,
-     selectedGenderOutcome,
-   ]); */
+  /* -------- Search Select Brand and Gender Function----------- */
+  const handleFilter = (brand, gender) => {
+    console.log("brand: ", brand);
+
+
+
+    const resultProducts = allData.filter(
+      (item) =>
+        (brand === "all" ||
+          brand === "" ||
+          item.brand.toLowerCase() === brand.toLowerCase()) &&
+        (gender === "all" ||
+          gender === "" ||
+          item.product_sex.toLowerCase() === gender.toLowerCase())
+    );
+    setPrintData([...resultProducts]);
+
+    console.log(
+      "brand",
+      brand,
+      "gender: ",
+      gender,
+      "resultProducts",
+      resultProducts,
+      "data",
+      printData
+    );
+  };
 
   console.log("printData: ", printData);
-  console.log("searchedGenderOutcome-2: ", searchedGenderOutcome);
 
   return (
     <div className="container">
@@ -190,12 +123,12 @@ function App() {
           <FilterBar
             brands={generateBrandsDataForDropdown()}
             genders={generateGenderDataForDropdown()}
-            colors={generateColorDataForDropdown()}
-            onBrandFilter={handleFilterBrand}
+            // colors={generateColorDataForDropdown()}
+            // onBrandFilter={handleFilterBrand}
             // onDescriptionFilter={handleFilterDescription}
-            onColorsFilter={handleFilterColors}
-            onGenderFilter={handleFilterGender}
-            data={allData}
+            //onColorsFilter={handleFilterColors}
+            onFilter={handleFilter}
+            //data={allData}
             /*  onDateFilter={handleFilterDate} */
           />
         </div>
