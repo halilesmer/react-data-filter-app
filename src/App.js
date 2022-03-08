@@ -16,7 +16,7 @@ function App() {
   const [genderJson, setGenderJson] = useState([]);
   const [brand, setBrand] = useState([]);
 
-  const [printData, setPrintData] = useState([]);
+ 
 
   const { get } = useFetch("http://localhost:3000/");
 
@@ -39,30 +39,47 @@ function App() {
       .catch((error) => console.log("Could not load product details", error));
   }, []);
   /* -------------- Color Json -------------- */
+ 
+  const [selectedBrand, setSelectedBrand] = useState('');
+  const [selectedGender, setSelectedGender] = useState('');
+  
+   const [renderBrandsData, setRenderBrandsData] = useState([]);
+   
+  const [renderGenderData, setRenderGenderData] = useState([])
 
   const generateBrandsDataForDropdown = () => {
     return [...new Set(brand?.map((item) => item?.brand))];
+    /*  if (renderBrandsData.length <= 0) {
+      return [...new Set(brand?.map((item) => item?.brand))];
+      
+    } else {
+      return [...new Set(renderBrandsData?.map(item => item?.brand))];
+    } */
   };
 
   const generateGenderDataForDropdown = () => {
-    return [...new Set(genderJson?.map((item) => item?.sex?.toUpperCase()))];
-    /* if (printData.length <= 0) {
+    if (renderGenderData.length>0 || renderBrandsData.length >0) {
+       return [...new Set(renderBrandsData?.map((item) => item?.product_sex?.toUpperCase()))];
+    } else {
+      return [...new Set(genderJson?.map((item) => item?.sex?.toUpperCase()))];
+    }
+   /*  if (renderBrandsData.length <= 0) {
       return [...new Set(genderJson?.map((item) => item?.sex?.toUpperCase()))];
     } else {
       return [
-        ...new Set(printData?.map((item) => item?.product_sex?.toUpperCase())),
+        ...new Set(renderBrandsData?.map((item) => item?.product_sex?.toUpperCase())),
       ];
-    }
-    */
+    } */
+   
   }; 
 
   const generateColorDataForDropdown = () => {
     /* return [...new Set(gender.map((item) => item.sex))]; */
-    return printData.length <= 0
+    return renderBrandsData.length <= 0
       ? [...new Set(allData?.map((item) => item?.primary_color?.toUpperCase()))]
       : [
           ...new Set(
-            printData?.map((item) => item?.primary_color?.toUpperCase())
+            renderBrandsData?.map((item) => item?.primary_color?.toUpperCase())
           ),
         ];
   };
@@ -83,7 +100,7 @@ function App() {
       setSearchedBrandOutcome([]);
 
       return setSearchedBrandOutcome([
-        ...printData.filter(
+        ...renderBrandsData.filter(
           (item) => item?.brand?.toLowerCase() === brand?.toLowerCase()
         ),
       ]);
@@ -93,13 +110,17 @@ function App() {
 
   /* -------- Search Select Brand and Gender Function----------- */
 
-  const [selectedBrand, setSelectedBrand] = useState('');
-  const [selectedGender, setSelectedGender] = useState('');
- 
+  
+  /* useEffect(() => {
+    setRenderBrandsData(renderGenderData);
+  }, [renderGenderData]); */
+
+  const [printData, setPrintData] = useState([])
+  
   const handleFilter = (brand=selectedBrand, gender=selectedGender) => {
     setSelectedBrand(brand);
     setSelectedGender(gender);
-
+    
     const resultProducts = allData.filter(
       (item) =>
       (brand === "all" ||
@@ -109,58 +130,66 @@ function App() {
       gender === "" ||
       item.product_sex.toLowerCase() === gender.toLowerCase())
       );
-      setPrintData([...resultProducts]);
+    if (gender === '') {
+      /* First (Brands) Filter */
+      setRenderBrandsData([...resultProducts]);
+    } else {
+        /* Second (Genders) Filter */
+        setRenderGenderData([...resultProducts])
+        
+      }
+  setPrintData(resultProducts)    ;
 
-    console.log(
-      "brand",
-      brand,
-      "gender: ",
-      gender,
-      "resultProducts",
-      resultProducts,
-      "data",
-      printData
-    );
-
-  };
-
-    console.log("selectedBrand: ", selectedBrand);
-    console.log("printData: ", printData);
-
+      console.log(
+        "brand",
+        brand,
+        "gender: ",
+        gender,
+        "resultProducts",
+        resultProducts,
+        "data",
+        renderBrandsData
+        );
+        
+      };
+      
+      console.log('renderGenderData: ', renderGenderData);
+      console.log("renderBrandsData: ", renderBrandsData);
+      
   return (
-
-    
     <div className="container">
       <div className="row">
         <div className="col-sm-3">
           <FilterBar
             brands={generateBrandsDataForDropdown()}
             genders={generateGenderDataForDropdown()}
+            onFilter={handleFilter}
+            renderBrandsData={renderBrandsData}
+            selectedBrand={selectedBrand}
+            selectedGender={selectedGender}
+            renderGenderData={renderGenderData}
             // colors={generateColorDataForDropdown()}
             // onBrandFilter={handleFilterBrand}
             // onDescriptionFilter={handleFilterDescription}
             //onColorsFilter={handleFilterColors}
-            onFilter={handleFilter}
-            //data={allData}
             /*  onDateFilter={handleFilterDate} */
           />
         </div>
         <div className="col-sm-9">
           <div className="row mt-5">
-            {printData.length === 0
+            {renderBrandsData.length === 0
               ? allData &&
                 allData.map((item, index) => (
                   <PersonItem item={item} key={index} />
                 ))
-              : printData &&
+              : renderBrandsData &&
                 printData.map((item, index) => (
                   <PersonItem item={item} key={index} />
                 ))}
           </div>
         </div>
       </div>
-      </div>
-
+    </div>
   );
 }
 

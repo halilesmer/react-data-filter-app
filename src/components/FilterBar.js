@@ -5,12 +5,14 @@ import { Select, FormControl, MenuItem, InputLabel, Box } from "@mui/material";
 const FilterBar = ({
   genders,
   onFilter,
+  selectedBrand,
+  selectedGender,
+  brands,
+  renderBrandsData,
+  renderGenderData,
   /* onDescriptionFilter, */
-
   /* onGenderFilter,
   onColorsFilter, */
-  brands,
-  /* data, */
   /* onDateFilter, */
 }) => {
   /* const [filters, setFilters] = useState({
@@ -18,22 +20,37 @@ const FilterBar = ({
     gender: "",
     color: "",
   }); */
-  const [brand, setBrand] = useState('');
-  console.log('brand: ', brand);
-  const [gender, setGender] = useState('');
-  console.log('gender: ', gender);
+  const [brand, setBrand] = useState("");
+  const [gender, setGender] = useState("");
+  const [allValue, setAllValue] = useState("All");
+  //console.log('renderBrandsDataFilterBar: ', renderBrandsData && renderBrandsData);
   
-
-
+  /*   const filterBrandCurrentData =
+  renderBrandsData && renderBrandsData.filter((item) => item.brand); */
+  
+  /* needing for disabled for gender Select */
+  const filterGenderFirstFilter =
+    renderBrandsData &&
+    renderBrandsData.map((item) => item.product_sex.toUpperCase());
+  const filterGenderSecondFilter =
+    renderBrandsData &&
+    renderBrandsData.map((item) => item.product_sex.toUpperCase());
+  
+  /*   console.log("brands: ", brands);
+  console.log("selectedGender: ", selectedGender);
+  console.log("filterBrandCurrentData: ", filterBrandCurrentData);
+  console.log('filterGenderFirstFilter: ', filterGenderFirstFilter);
+  console.log("renderBrandsData: ", renderBrandsData); */
+  console.log("genders: ", genders);
+  console.log('renderGenderData: ', renderGenderData);
 
   const handleInput = (field) => (event) => {
-
     //const { brand, gender } = filters;
     const { value } = event.target;
     setBrand(field === "brand" ? value.toLowerCase() : brand);
     setGender(field === "gender" ? value.toLowerCase() : gender);
 
-   const brand2 = field === "brand" ? value.toLowerCase() : brand;
+    const brand2 = field === "brand" ? value.toLowerCase() : brand;
     const gender2 = field === "gender" ? value.toLowerCase() : gender;
 
     /*   setFilters({
@@ -58,7 +75,7 @@ const FilterBar = ({
         <h4 className="border-bottom">Filters</h4>
       </div>
       <div className="col-sm-12 my-2"></div>
-      {/* -------- Search Input- Brand ----------- */}
+      {/* -------- 1./First Filter-Search Input- Brand ----------- */}
       <Box sx={{ minWidth: 130 }}>
         <div className="col-sm-12 my-2">
           <FormControl margin="dense" fullWidth>
@@ -72,32 +89,55 @@ const FilterBar = ({
               //value={filters.brand}
               onChange={handleInput("brand")}
             >
-              <MenuItem value="all">All</MenuItem>
+              <MenuItem value="all">
+                <em>{allValue}</em>
+              </MenuItem>
               {brands.map((brand) => (
-                <MenuItem value={brand} key={brand}>
+                <MenuItem
+                  value={brand}
+                  key={brand}
+                  disabled={selectedBrand.toLowerCase() === brand.toLowerCase()}
+                >
                   {brand}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </div>
-
         {/* -------- Gender Input Select ----------- */}
-
         <div className="col-sm-12 my-2">
           <FormControl margin="dense" fullWidth>
             <InputLabel id="gender-select">Gender</InputLabel>
             <Select
               labelId="gender-select"
               id="gender"
-              // value={filters.gender}
+              // value={allValue}
               defaultValue={"all"}
               label="Gender"
               onChange={handleInput("gender")}
             >
-              <MenuItem value="all">All</MenuItem>
+              {
+                <MenuItem value="all">
+                  <em>All</em>
+                </MenuItem>
+              }
               {genders.map((gender) => (
-                <MenuItem value={gender} key={gender}>
+                <MenuItem
+                  value={gender}
+                  key={gender}
+                  // disabled={selectedGender.toLowerCase() === gender?.toLowerCase()}
+                  /* disabled={
+                   renderBrandsData.length > 0 &&
+                   selectedBrand !== "all" &&
+                   !filterGenderFirstFilter.includes(gender)
+                 } */
+                 /*  disabled={
+                    selectedGender.toLowerCase() === gender?.toLowerCase() ||
+                    (renderBrandsData.length > 0 &&
+                      selectedBrand !== "all" &&
+                      !filterGenderFirstFilter.includes(gender))
+                  } */
+                >
                   {gender}
                 </MenuItem>
               ))}
