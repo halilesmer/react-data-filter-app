@@ -58,8 +58,18 @@ function App() {
   };
 
   const generateGenderDataForDropdown = () => {
-    if (renderGenderData.length>0 || renderBrandsData.length >0) {
-       return [...new Set(renderBrandsData?.map((item) => item?.product_sex?.toUpperCase()))];
+    if (
+      renderGenderData.length > 0 ||
+      renderBrandsData.length > 0 ||
+      selectedBrand === "All".toLowerCase() ||
+      selectedGender === "All".toLowerCase()
+    ) {
+      /* for first filter (brands) */
+      return [
+        ...new Set(
+          renderBrandsData?.map((item) => item?.product_sex?.toUpperCase())
+        ),
+      ];
     } else {
       return [...new Set(genderJson?.map((item) => item?.sex?.toUpperCase()))];
     }
@@ -153,7 +163,7 @@ function App() {
         
       };
       
-      console.log('renderGenderData: ', renderGenderData);
+      console.log('printData: ', printData);
       console.log("renderBrandsData: ", renderBrandsData);
       
   return (
@@ -177,6 +187,13 @@ function App() {
         </div>
         <div className="col-sm-9">
           <div className="row mt-5">
+            {printData.length < 1 && !renderBrandsData.length < 1 && (
+              <div>
+                <center>
+                  <strong>No Result</strong>
+                </center>
+              </div>
+            )}
             {renderBrandsData.length === 0
               ? allData &&
                 allData.map((item, index) => (
