@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import { Select, FormControl, MenuItem, InputLabel, Box } from "@mui/material";
 
 const FilterBar = ({
@@ -12,25 +13,35 @@ const FilterBar = ({
   /* data, */
   /* onDateFilter, */
 }) => {
- 
+  /* const [filters, setFilters] = useState({
+    brand: "",
+    gender: "",
+    color: "",
+  }); */
+  const [brand, setBrand] = useState('');
+  console.log('brand: ', brand);
+  const [gender, setGender] = useState('');
+  console.log('gender: ', gender);
+  
 
 
 
   const handleInput = (field) => (event) => {
+
     //const { brand, gender } = filters;
     const { value } = event.target;
-    
+    setBrand(field === "brand" ? value.toLowerCase() : brand);
+    setGender(field === "gender" ? value.toLowerCase() : gender);
 
-    const brand = field === 'brand' ? value.toLowerCase() : ''
-    const gender = field === "gender" ? value.toLowerCase() : "";
+   const brand2 = field === "brand" ? value.toLowerCase() : brand;
+    const gender2 = field === "gender" ? value.toLowerCase() : gender;
 
-      /* setFilters({
-        ...filters,
-        [field]: value,
-      }); */
-      
+    /*   setFilters({
+      ...filters,
+      [field]: value,
+    }); */
 
-      onFilter(brand, gender);
+    onFilter(brand2, gender2);
 
     /* switch (field) {
       case "brand"|| 'gender':
@@ -39,7 +50,6 @@ const FilterBar = ({
         default:
           break;
         } */
-      
   };
 
   return (
@@ -47,9 +57,7 @@ const FilterBar = ({
       <div className="col">
         <h4 className="border-bottom">Filters</h4>
       </div>
-      <div className="col-sm-12 my-2">
-      
-      </div>
+      <div className="col-sm-12 my-2"></div>
       {/* -------- Search Input- Brand ----------- */}
       <Box sx={{ minWidth: 130 }}>
         <div className="col-sm-12 my-2">
@@ -60,7 +68,6 @@ const FilterBar = ({
               displayEmpty
               labelId="brand-select"
               id="brand"
-              name="brand"
               label="Brand"
               //value={filters.brand}
               onChange={handleInput("brand")}
@@ -83,8 +90,8 @@ const FilterBar = ({
             <Select
               labelId="gender-select"
               id="gender"
-             // value={filters.gender}
-              defaultValue={'all'}
+              // value={filters.gender}
+              defaultValue={"all"}
               label="Gender"
               onChange={handleInput("gender")}
             >

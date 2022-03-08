@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-
 import "./App.css";
 import PersonItem from "./components/PersonItem";
 //import { data } from "./MOCK_DATA";
 import FilterBar from "./components/FilterBar";
 import useFetch from "./useFetch";
 
+
+
+
 function App() {
+ 
+
   const [allData, setAllData] = useState(null);
 
   const [genderJson, setGenderJson] = useState([]);
@@ -41,14 +45,16 @@ function App() {
   };
 
   const generateGenderDataForDropdown = () => {
-    if (printData.length <= 0) {
+    return [...new Set(genderJson?.map((item) => item?.sex?.toUpperCase()))];
+    /* if (printData.length <= 0) {
       return [...new Set(genderJson?.map((item) => item?.sex?.toUpperCase()))];
     } else {
       return [
         ...new Set(printData?.map((item) => item?.product_sex?.toUpperCase())),
       ];
     }
-  };
+    */
+  }; 
 
   const generateColorDataForDropdown = () => {
     /* return [...new Set(gender.map((item) => item.sex))]; */
@@ -86,21 +92,24 @@ function App() {
   }; */
 
   /* -------- Search Select Brand and Gender Function----------- */
-  const handleFilter = (brand, gender) => {
-    console.log("brand: ", brand);
 
-
+  const [selectedBrand, setSelectedBrand] = useState('');
+  const [selectedGender, setSelectedGender] = useState('');
+ 
+  const handleFilter = (brand=selectedBrand, gender=selectedGender) => {
+    setSelectedBrand(brand);
+    setSelectedGender(gender);
 
     const resultProducts = allData.filter(
       (item) =>
-        (brand === "all" ||
-          brand === "" ||
-          item.brand.toLowerCase() === brand.toLowerCase()) &&
-        (gender === "all" ||
-          gender === "" ||
-          item.product_sex.toLowerCase() === gender.toLowerCase())
-    );
-    setPrintData([...resultProducts]);
+      (brand === "all" ||
+      brand === "" ||
+      item.brand.toLowerCase() === brand.toLowerCase()) &&
+      (gender === "all" ||
+      gender === "" ||
+      item.product_sex.toLowerCase() === gender.toLowerCase())
+      );
+      setPrintData([...resultProducts]);
 
     console.log(
       "brand",
@@ -112,11 +121,15 @@ function App() {
       "data",
       printData
     );
+
   };
 
-  console.log("printData: ", printData);
+    console.log("selectedBrand: ", selectedBrand);
+    console.log("printData: ", printData);
 
   return (
+
+    
     <div className="container">
       <div className="row">
         <div className="col-sm-3">
@@ -146,7 +159,8 @@ function App() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+
   );
 }
 
