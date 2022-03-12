@@ -1,6 +1,4 @@
-
 const PersonItem = ({ item }) => {
-
   return (
     <div className="col-sm-4">
       <div className="card my-2">
@@ -13,10 +11,10 @@ const PersonItem = ({ item }) => {
           <h5 className="card-title">
             {item?.brand} {item?.product_name}
           </h5>
-         <p className="card-text">{item?.product_description}</p>
+          <p className="card-text">{item?.product_description}</p>
           <p className="card-text">{item?.product_sex?.toUpperCase()}</p>
           <p className="card-text">
-            <p className="card-text">{item?.primary_color?.toUpperCase()}</p>
+            <span className="card-text">{item?.primary_color?.toUpperCase()}</span>
           </p>
         </div>
       </div>

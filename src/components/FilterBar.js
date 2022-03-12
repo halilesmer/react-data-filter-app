@@ -10,6 +10,7 @@ const FilterBar = ({
   brands,
   renderBrandsData,
   renderGenderData,
+  printData,
   /* onDescriptionFilter, */
   /* onGenderFilter,
   onColorsFilter, */
@@ -22,27 +23,23 @@ const FilterBar = ({
   }); */
   const [brand, setBrand] = useState("");
   const [gender, setGender] = useState("");
-  const [allValue, setAllValue] = useState("All");
+  const [printDisable, setPrintDisable] = useState([]);
+
   //console.log('renderBrandsDataFilterBar: ', renderBrandsData && renderBrandsData);
-  
+
   /*   const filterBrandCurrentData =
   renderBrandsData && renderBrandsData.filter((item) => item.brand); */
-  
+
   /* needing for disabled for gender Select */
-  const filterGenderFirstFilter =
-    renderBrandsData &&
-    renderBrandsData.map((item) => item.product_sex.toUpperCase());
-  const filterGenderSecondFilter =
-    renderBrandsData &&
-    renderBrandsData.map((item) => item.product_sex.toUpperCase());
-  
-  /*   console.log("brands: ", brands);
-  console.log("selectedGender: ", selectedGender);
-  console.log("filterBrandCurrentData: ", filterBrandCurrentData);
-  console.log('filterGenderFirstFilter: ', filterGenderFirstFilter);
-  console.log("renderBrandsData: ", renderBrandsData); */
+  const print = printData.length > 0 && [
+    ...new Set(printData.map((item) => item?.product_sex)),
+  ];
+
   console.log("genders: ", genders);
-  console.log('renderGenderData: ', renderGenderData);
+  console.log("printData: ", printData);
+  console.log("print: ", print);
+
+  
 
   const handleInput = (field) => (event) => {
     //const { brand, gender } = filters;
@@ -90,12 +87,12 @@ const FilterBar = ({
               onChange={handleInput("brand")}
             >
               <MenuItem value="all">
-                <em>{allValue}</em>
+                <em>All</em>
               </MenuItem>
-              {brands.map((brand) => (
+              {brands.map((brand, index) => (
                 <MenuItem
                   value={brand}
-                  key={brand}
+                  key={index}
                   disabled={selectedBrand.toLowerCase() === brand.toLowerCase()}
                 >
                   {brand}
@@ -121,22 +118,30 @@ const FilterBar = ({
                   <em>All</em>
                 </MenuItem>
               }
-              {genders.map((gender) => (
+              {genders.map((gender, index) => (
                 <MenuItem
                   value={gender}
-                  key={gender}
-                  // disabled={selectedGender.toLowerCase() === gender?.toLowerCase()}
-                  /* disabled={
-                   renderBrandsData.length > 0 &&
-                   selectedBrand !== "all" &&
-                   !filterGenderFirstFilter.includes(gender)
-                 } */
-                 /*  disabled={
-                    selectedGender.toLowerCase() === gender?.toLowerCase() ||
-                    (renderBrandsData.length > 0 &&
-                      selectedBrand !== "all" &&
-                      !filterGenderFirstFilter.includes(gender))
-                  } */
+                  key={index}
+                  disabled={
+                    printData.length < 1
+                      ? null
+                      : print.find((item) => {
+
+                        if (!gender || !item) {
+                          return true;
+                        } else if (
+                          (gender.toLowerCase() === item.toLowerCase()) ===
+                            undefined ||
+                          typeof "string"
+                        ) {
+                          return false;
+                        }
+                        if (gender.toLowerCase() === item.toLowerCase()) {
+                          return true;
+                        }
+                      })
+                  }
+
                 >
                   {gender}
                 </MenuItem>

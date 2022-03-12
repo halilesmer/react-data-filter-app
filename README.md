@@ -73,3 +73,19 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 
 
+After you run 'nmp start', you have to start the json-server: 
+json-server --watch src/db.json
+
+or
+
+you put in terminal;
+$ json-server --watch src/db.json --port 3001
+
+to start a custom localhost number.
+
+Here you can got more info:
+https://www.npmjs.com/package/json-server
+
+After that, you must udjust the localhost number in your App.js:
+
+  const { get } = useFetch("http://localhost:3001/");
