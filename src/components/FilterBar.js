@@ -6,15 +6,9 @@ const FilterBar = ({
   genders,
   onFilter,
   selectedBrand,
-  selectedGender,
   brands,
-  renderBrandsData,
-  renderGenderData,
+
   printData,
-  /* onDescriptionFilter, */
-  /* onGenderFilter,
-  onColorsFilter, */
-  /* onDateFilter, */
 }) => {
   /* const [filters, setFilters] = useState({
     brand: "",
@@ -23,23 +17,6 @@ const FilterBar = ({
   }); */
   const [brand, setBrand] = useState("");
   const [gender, setGender] = useState("");
-  const [printDisable, setPrintDisable] = useState([]);
-
-  //console.log('renderBrandsDataFilterBar: ', renderBrandsData && renderBrandsData);
-
-  /*   const filterBrandCurrentData =
-  renderBrandsData && renderBrandsData.filter((item) => item.brand); */
-
-  /* needing for disabled for gender Select */
-  const print = printData.length > 0 && [
-    ...new Set(printData.map((item) => item?.product_sex)),
-  ];
-
-  console.log("genders: ", genders);
-  console.log("printData: ", printData);
-  console.log("print: ", print);
-
-  
 
   const handleInput = (field) => (event) => {
     //const { brand, gender } = filters;
@@ -56,6 +33,8 @@ const FilterBar = ({
     }); */
 
     onFilter(brand2, gender2);
+    /*   console.log('gender2: ', gender2);
+    console.log('brand2: ', brand2); */
 
     /* switch (field) {
       case "brand"|| 'gender':
@@ -65,10 +44,14 @@ const FilterBar = ({
           break;
         } */
   };
-  console.log("gender", gender);
-  console.log("selectedGender: ", selectedGender);
 
-  
+  const filterGender = [
+    ...new Set(printData && printData.map((item) => item.product_sex)),
+  ];
+
+  /* console.log('filterGender: ', filterGender);
+  console.log("printDataFilterBar: ", printData); */
+
   return (
     <div className="row my-5">
       <div className="col">
@@ -126,9 +109,9 @@ const FilterBar = ({
                   value={gender}
                   key={index}
                   disabled={
-                    selectedGender.toLowerCase() === gender.toLowerCase()
+                    printData.length > 0 &&
+                    !filterGender.includes(gender.toLowerCase())
                   }
-
                 >
                   {gender}
                 </MenuItem>
@@ -183,23 +166,7 @@ const FilterBar = ({
 
 export default FilterBar;
 
-/* -------- Gender Select ----------- */
 
-/* <div className="col-sm-12 my-2">
-        <label htmlFor="gender">Gender</label>
-        <select
-          className="form-control"
-          id="gender"
-          onChange={handleInput("gender")}
-        >
-          <option value="">All</option>
-          {genders.map((gender) => (
-            <option value={gender} key={gender}>
-              {gender}
-            </option>
-          ))}
-        </select>
-      </div> */
 
 /* -------- Color Select ----------- */
 
