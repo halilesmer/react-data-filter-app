@@ -65,7 +65,10 @@ const FilterBar = ({
           break;
         } */
   };
+  console.log("gender", gender);
+  console.log("selectedGender: ", selectedGender);
 
+  
   return (
     <div className="row my-5">
       <div className="col">
@@ -123,23 +126,7 @@ const FilterBar = ({
                   value={gender}
                   key={index}
                   disabled={
-                    printData.length < 1
-                      ? null
-                      : print.find((item) => {
-
-                        if (!gender || !item) {
-                          return true;
-                        } else if (
-                          (gender.toLowerCase() === item.toLowerCase()) ===
-                            undefined ||
-                          typeof "string"
-                        ) {
-                          return false;
-                        }
-                        if (gender.toLowerCase() === item.toLowerCase()) {
-                          return true;
-                        }
-                      })
+                    selectedGender.toLowerCase() === gender.toLowerCase()
                   }
 
                 >
