@@ -1,56 +1,31 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 import PersonItem from "./components/PersonItem";
 //import { data } from "./MOCK_DATA";
 import FilterBar from "./components/FilterBar";
-import useFetch from "./useFetch";
+
+import { productJson, genderJson, brandJson } from './db.js'
+
+
+
+
 
 function App() {
-  const [allData, setAllData] = useState(null);
 
-  const [genderJson, setGenderJson] = useState([]);
-  const [brand, setBrand] = useState([]);
-  
-
-  const { get } = useFetch("http://localhost:3000/");
-
-  /* -------------- Products Json -------------- */
-  useEffect(() => {
-    get("products_get_product_filter")
-      .then((data) => {
-        setAllData(data.data);
-        setBrand(data.data);
-      })
-      .catch((error) => console.log("Could not load product details", error));
-  }, []);
-
-  /* -------------- Gender Json -------------- */
-  useEffect(() => {
-    get("common_get_gender")
-      .then((data) => {
-        setGenderJson(data.data);
-      })
-      .catch((error) => console.log("Could not load product details", error));
-  }, []);
-  /* -------------- Color Json -------------- */
 
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
 
   const generateBrandsDataForDropdown = () => {
-    return [...new Set(brand?.map((item) => item?.brand))];
+    return [...new Set(brandJson.data?.map((item) => item?.brand_name))];
   };
 
   const generateGenderDataForDropdown = () => {
     return [
-      ...new Set(genderJson?.map((item) => item?.sex?.toUpperCase())),
+      ...new Set(genderJson?.data.map((item) => item?.sex?.toUpperCase())),
     ];
   };
 
-  const generateColorDataForDropdown = () => {
-    /* return [...new Set(gender.map((item) => item.sex))]; */
-
-  };
 
   /* -------- Search Select Brand and Gender Function----------- */
 
@@ -62,8 +37,8 @@ function App() {
     setSelectedGender(gender);
 
     const resultProducts =
-      allData &&
-      allData
+      productJson.data &&
+      productJson.data
         .filter((obj) => {
           if (brand === "all") {
             return obj;
@@ -100,7 +75,7 @@ function App() {
   
   */
   console.log("printData: ", printData);
-  console.log("genderJson: ", genderJson);
+
   
 
   return (
@@ -116,7 +91,7 @@ function App() {
             selectedGender={selectedGender}
 
             printData={printData}
-            allData={allData}
+            productJson ={productJson.data}
             // colors={generateColorDataForDropdown()}
             // onBrandFilter={handleFilterBrand}
             // onDescriptionFilter={handleFilterDescription}
@@ -142,8 +117,8 @@ function App() {
                   <PersonItem item={item} key={index} />
                 ))
               : (selectedBrand === "" || selectedGender === "") &&
-                allData &&
-                allData.map((item, index) => (
+                productJson.data &&
+                productJson.data.map((item, index) => (
                   <PersonItem item={item} key={index} />
                 ))}
           </div>
@@ -167,8 +142,8 @@ export default App;
               ? printData.map((item, index) => (
                   <PersonItem item={item} key={index} />
                 ))
-              : (selectedBrand === '' || selectedGender === '')  && allData &&
-                allData.map((item, index) => (
+              : (selectedBrand === '' || selectedGender === '')  && productJson.data &&
+                productJson.data.map((item, index) => (
                   <PersonItem item={item} key={index} />
                 ))
                 
