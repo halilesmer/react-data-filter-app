@@ -3,125 +3,129 @@ import { useState } from "react";
 import { Select, FormControl, MenuItem, InputLabel, Box } from "@mui/material";
 
 const FilterBar = ({
-  genders,
   onFilter,
   selectedBrand,
   brands,
-
+  genders,
+productJson,
   printData,
 }) => {
-  /* const [filters, setFilters] = useState({
-    brand: "",
-    gender: "",
-    color: "",
-  }); */
+
   const [brand, setBrand] = useState("");
   const [gender, setGender] = useState("");
 
   const handleInput = (field) => (event) => {
-    //const { brand, gender } = filters;
     const { value } = event.target;
     setBrand(field === "brand" ? value.toLowerCase() : brand);
     setGender(field === "gender" ? value.toLowerCase() : gender);
 
-    const brand2 = field === "brand" ? value.toLowerCase() : brand;
-    const gender2 = field === "gender" ? value.toLowerCase() : gender;
+    const brandForOnfilter = field === "brand" ? value.toLowerCase() : brand;
+    const genderForOnfilter = field === "gender" ? value.toLowerCase() : gender;
 
-    /*   setFilters({
-      ...filters,
-      [field]: value,
-    }); */
 
-    onFilter(brand2, gender2);
-    /*   console.log('gender2: ', gender2);
-    console.log('brand2: ', brand2); */
+    onFilter(brandForOnfilter, genderForOnfilter);
+    /*   console.log('genderForOnfilter: ', genderForOnfilter);
+    console.log('brandForOnfilter: ', brandForOnfilter); */
 
-    /* switch (field) {
-      case "brand"|| 'gender':
-        onFilter(brand, gender);
-        break;
-        default:
-          break;
-        } */
   };
 
-  const filterGender = [
+  const filterBrandsInPrintData = [
+    ...new Set(printData && printData.map((item) => item?.brand.toLowerCase())),
+  ];
+  const filterBrandsInProductsData = [
+    ...new Set(productJson && productJson.map((item) => item?.brand.toLowerCase())),
+  ];
+  
+  const filterGendersInPrintData = [
     ...new Set(printData && printData.map((item) => item.product_sex)),
   ];
+  
+  /* 
+  console.log('filterBrandsInBrandsData: ', filterBrandsInBrandsData);
+  console.log("printDataFilterBar: ", printData); 
+  console.log("genders: ", genders);
+  console.log('filterGendersInPrintData: ', filterGendersInPrintData);
+  console.log('filterBrandsInPrintData: ', filterBrandsInPrintData);
+  console.log("productJson: ", productJson);
+  console.log('filterBrandsInProductsData: ', filterBrandsInProductsData);
+  console.log("brands: ", brands);
+  */
+ 
+ return (
+   <div className="row my-5">
+     <div className="col">
+       <h4 className="border-bottom">Filters</h4>
+     </div>
+     <div className="col-sm-12 my-2"></div>
+     {/* -------- 1./First Filter-Search Input- Brand ----------- */}
+     <Box sx={{ minWidth: 130 }}>
+       <div className="col-sm-12 my-2">
+         <FormControl margin="dense" fullWidth>
+           <InputLabel id="brand-select">Brand</InputLabel>
+           <Select
+             defaultValue={"all"}
+             displayEmpty
+             labelId="brand-select"
+             id="brand"
+             label="Brand"
+             //value={filters.brand}
+             onChange={handleInput("brand")}
+           >
+             <MenuItem value="all">
+               <em>All</em>
+             </MenuItem>
+             {brands.map((brand, index) => (
+               <MenuItem
+                 value={brand}
+                 key={index}
+             
+                 disabled={
+                   printData.length > 0 ?
+                     !filterBrandsInPrintData.includes(brand.toLowerCase()) :
+                     printData.length < 1 && !filterBrandsInProductsData.includes(brand.toLowerCase())
+                 }
+               >
+                 {brand}
+               </MenuItem>
+             ))}
+           </Select>
+         </FormControl>
+       </div>
+       {/* -------- Gender Input Select ----------- */}
+       <div className="col-sm-12 my-2">
+         <FormControl margin="dense" fullWidth>
+           <InputLabel id="gender-select">Gender</InputLabel>
+           <Select
+             labelId="gender-select"
+             id="gender"
+             // value={allValue}
+             defaultValue={"all"}
+             label="Gender"
+             onChange={handleInput("gender")}
+           >
+             {
+               <MenuItem value="all">
+                 <em>All</em>
+               </MenuItem>
+             }
+             {genders.map((gender, index) => (
+               <MenuItem
+                 value={gender}
+                 key={index}
+                 disabled={
+                   printData.length > 0 &&
+                   !filterGendersInPrintData.includes(gender.toLowerCase())
+                 }
+               >
+                 {gender}
+               </MenuItem>
+             ))}
+           </Select>
+         </FormControl>
+       </div>
 
-  /* console.log('filterGender: ', filterGender);
-  console.log("printDataFilterBar: ", printData); */
-
-  return (
-    <div className="row my-5">
-      <div className="col">
-        <h4 className="border-bottom">Filters</h4>
-      </div>
-      <div className="col-sm-12 my-2"></div>
-      {/* -------- 1./First Filter-Search Input- Brand ----------- */}
-      <Box sx={{ minWidth: 130 }}>
-        <div className="col-sm-12 my-2">
-          <FormControl margin="dense" fullWidth>
-            <InputLabel id="brand-select">Brand</InputLabel>
-            <Select
-              defaultValue={"all"}
-              displayEmpty
-              labelId="brand-select"
-              id="brand"
-              label="Brand"
-              //value={filters.brand}
-              onChange={handleInput("brand")}
-            >
-              <MenuItem value="all">
-                <em>All</em>
-              </MenuItem>
-              {brands.map((brand, index) => (
-                <MenuItem
-                  value={brand}
-                  key={index}
-                  disabled={selectedBrand.toLowerCase() === brand.toLowerCase()}
-                >
-                  {brand}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-        {/* -------- Gender Input Select ----------- */}
-        <div className="col-sm-12 my-2">
-          <FormControl margin="dense" fullWidth>
-            <InputLabel id="gender-select">Gender</InputLabel>
-            <Select
-              labelId="gender-select"
-              id="gender"
-              // value={allValue}
-              defaultValue={"all"}
-              label="Gender"
-              onChange={handleInput("gender")}
-            >
-              {
-                <MenuItem value="all">
-                  <em>All</em>
-                </MenuItem>
-              }
-              {genders.map((gender, index) => (
-                <MenuItem
-                  value={gender}
-                  key={index}
-                  disabled={
-                    printData.length > 0 &&
-                    !filterGender.includes(gender.toLowerCase())
-                  }
-                >
-                  {gender}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-
-        {/* -------- Color Select ----------- */}
-        {/*   <div className="col-sm-12 my-2">
+       {/* -------- Color Select ----------- */}
+       {/*   <div className="col-sm-12 my-2">
           <FormControl margin="dense" fullWidth>
             <InputLabel id="color-select">Color</InputLabel>
             <Select
@@ -140,9 +144,9 @@ const FilterBar = ({
             </Select>
           </FormControl> 
         </div>*/}
-      </Box>
+     </Box>
 
-      {/*  <div className="col-sm-12 my-2">
+     {/*  <div className="col-sm-12 my-2">
         <label htmlFor="startDate">From</label>
         <input
           type="date"
@@ -160,8 +164,8 @@ const FilterBar = ({
           onChange={handleInput("to")}
         />
       </div> */}
-    </div>
-  );
+   </div>
+ );
 };
 
 export default FilterBar;

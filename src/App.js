@@ -68,13 +68,9 @@ function App() {
     );
   };
 
-  /*
-
-  console.log("selectedBrrand: ", selectedBrand);
-  console.log("selectedGender: ", selectedGender);
-  
-  */
+  /* console.log('genders: ', generateGenderDataForDropdown()); 
   console.log("printData: ", printData);
+  */
 
   
 
@@ -83,6 +79,7 @@ function App() {
       <div className="row">
         <div className="col-sm-3">
           <FilterBar
+          productJson ={productJson.data}
             brands={generateBrandsDataForDropdown()}
             genders={generateGenderDataForDropdown()}
             onFilter={handleFilter}
@@ -91,7 +88,6 @@ function App() {
             selectedGender={selectedGender}
 
             printData={printData}
-            productJson ={productJson.data}
             // colors={generateColorDataForDropdown()}
             // onBrandFilter={handleFilterBrand}
             // onDescriptionFilter={handleFilterDescription}
