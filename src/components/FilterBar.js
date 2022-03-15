@@ -19,7 +19,8 @@ const FilterBar = ({
   const [variant, setVariant] = useState('outlined')
 
   useEffect(() => {
-    onFilter(brand, gender, color, category);
+ onFilter(brand, gender, color, category);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [brand, gender, color, category]);
   /*   const handleInput = (field) => (event) => {
     const { value } = event.target;
@@ -34,6 +35,8 @@ const FilterBar = ({
  
 
   }; */
+ 
+  
 
   const filterBrandsInProductsData = [
     ...new Set(
