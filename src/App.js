@@ -12,10 +12,6 @@ import { productJson, genderJson, brandJson } from './db.js'
 
 function App() {
 
-
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const [selectedGender, setSelectedGender] = useState("");
-
   const generateBrandsDataForDropdown = () => {
     return [...new Set(brandJson.data?.map((item) => item?.brand_name))];
   };
@@ -25,36 +21,60 @@ function App() {
       ...new Set(genderJson?.data.map((item) => item?.sex?.toUpperCase())),
     ];
   };
-
+const generateColorDataForDropdown = () => {
+  return [
+    ...new Set(
+      productJson?.data.map((item) => item?.primary_color?.toUpperCase())
+    ),
+  ];
+};
+  const generateCategoryDataForDropdown = () => {
+    return [
+      ...new Set(
+        productJson?.data.map((item) => item?.sub_category?.toUpperCase())
+      ),
+    ];
+  };
 
   /* -------- Search Select Brand and Gender Function----------- */
 
   const [printData, setPrintData] = useState([]);
 
-  const handleFilter = (brand = selectedBrand, gender = selectedGender) => {
-    setSelectedBrand(brand);
+  const handleFilter = (brand, gender, color, category ) => {
 
-    setSelectedGender(gender);
-
-    const resultProducts =
-      productJson.data &&
-      productJson.data
-        .filter((obj) => {
-          if (brand === "all") {
-            return obj;
-          }
-          return brand !== ""
-            ? obj.brand.toLowerCase() === brand.toLocaleLowerCase()
-            : true;
-        })
-        .filter((obj) => {
-          if (gender === "all") {
-            return obj;
-          }
-          return gender !== ""
-            ? obj.product_sex.toLowerCase() === gender.toLocaleLowerCase()
-            : true;
-        });
+    const resultProducts = productJson.data
+      .filter((obj) => {
+        if (brand === "all") {
+          return true;
+        }
+        return brand !== ""
+          ? obj.brand.toLowerCase() === brand.toLocaleLowerCase()
+          : true;
+      })
+      .filter((obj) => {
+        if (gender === "all") {
+          return obj;
+        }
+        return gender !== ""
+          ? obj.product_sex.toLowerCase() === gender.toLocaleLowerCase()
+          : true;
+      })
+      .filter((obj) => {
+        if (color === "all") {
+          return obj;
+        }
+        return color !== ""
+          ? obj.primary_color.toLowerCase() === color.toLocaleLowerCase()
+          : true;
+      })
+      .filter((obj) => {
+        if (category === "all") {
+          return obj;
+        }
+        return category !== ""
+          ? obj.sub_category.toLowerCase() === category.toLocaleLowerCase()
+          : true;
+      });
     setPrintData(resultProducts);
 
     console.log(
@@ -70,25 +90,22 @@ function App() {
 
   /* console.log('genders: ', generateGenderDataForDropdown()); 
   console.log("printData: ", printData);
+  console.log("generateColorDataForDropdown: ", generateColorDataForDropdown());  
   */
 
-  
 
   return (
     <div className="container">
       <div className="row">
         <div className="col-sm-3">
           <FilterBar
-          productJson ={productJson.data}
+            productJson={productJson.data}
             brands={generateBrandsDataForDropdown()}
             genders={generateGenderDataForDropdown()}
+            colors={generateColorDataForDropdown()}
+            categories={generateCategoryDataForDropdown()}
             onFilter={handleFilter}
-          
-            selectedBrand={selectedBrand}
-            selectedGender={selectedGender}
-
             printData={printData}
-            // colors={generateColorDataForDropdown()}
             // onBrandFilter={handleFilterBrand}
             // onDescriptionFilter={handleFilterDescription}
             //onColorsFilter={handleFilterColors}
@@ -97,22 +114,19 @@ function App() {
         </div>
         <div className="col-sm-9">
           <div className="row mt-5">
-            
-            
-            {printData.length < 1 &&
-              (selectedBrand !== "" || selectedGender !== "") && (
+            {printData.length < 1 && (
                 <div>
                   <center>
                     <strong>No Result</strong>
                   </center>
                 </div>
               )}
-            
+
             {printData.length > 0
               ? printData.map((item, index) => (
                   <PersonItem item={item} key={index} />
                 ))
-              : (selectedBrand === "" || selectedGender === "") &&
+              : 
                 productJson.data &&
                 productJson.data.map((item, index) => (
                   <PersonItem item={item} key={index} />
