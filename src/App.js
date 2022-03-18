@@ -4,7 +4,7 @@ import PersonItem from "./components/PersonItem";
 //import { data } from "./MOCK_DATA";
 import FilterBar from "./components/FilterBar";
 
-import { productJson, genderJson, brandJson } from './db.js'
+import { productJson, genderJson} from './db.js'
 
 
 
@@ -13,7 +13,10 @@ import { productJson, genderJson, brandJson } from './db.js'
 function App() {
 
   const generateBrandsDataForDropdown = () => {
-    return [...new Set(brandJson.data?.map((item) => item?.brand_name))];
+    /* return [...new Set(brandJson.data?.map((item) => item?.brand_name))]; */
+   return [...new Set(productJson.data?.map((item) => item?.brand))];
+
+   
   };
 
   const generateGenderDataForDropdown = () => {
@@ -87,11 +90,7 @@ const generateColorDataForDropdown = () => {
   
     );
   };
-
-  /* console.log('genders: ', generateGenderDataForDropdown()); 
-  console.log("printData: ", printData);
-  console.log("generateColorDataForDropdown: ", generateColorDataForDropdown());  
-  */
+  
 
 
   return (
@@ -106,31 +105,30 @@ const generateColorDataForDropdown = () => {
             categories={generateCategoryDataForDropdown()}
             onFilter={handleFilter}
             printData={printData}
-            // onBrandFilter={handleFilterBrand}
-            // onDescriptionFilter={handleFilterDescription}
-            //onColorsFilter={handleFilterColors}
-            /*  onDateFilter={handleFilterDate} */
+          
           />
         </div>
         <div className="col-sm-9">
           <div className="row mt-5">
-            {printData.length < 1 && (
-                <div>
-                  <center>
-                    <strong>No Result</strong>
-                  </center>
-                </div>
-              )}
+            {!printData && (
+              <div>
+                <p style={{ width: "100px", margin: "0 auto" }}>
+                  <strong>No Result</strong>
+                </p>
+              </div>
+            )}
+            {printData.map((item, index) => (
+              <PersonItem item={item} key={index} />
+            ))}
 
-            {printData.length > 0
+            {/*  {printData.length > 0
               ? printData.map((item, index) => (
                   <PersonItem item={item} key={index} />
                 ))
-              : 
-                productJson.data &&
+              : productJson.data &&
                 productJson.data.map((item, index) => (
                   <PersonItem item={item} key={index} />
-                ))}
+                ))} */}
           </div>
         </div>
       </div>

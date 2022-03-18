@@ -13,36 +13,19 @@ const FilterBar = ({
 }) => {
   const [brand, setBrand] = useState("");
   const [gender, setGender] = useState("");
-  const [color, setColor] = useState("");
   const [category, setCategory] = useState("");
+  const [color, setColor] = useState("");
+  
 
   const [variant, setVariant] = useState('outlined')
 
   useEffect(() => {
  onFilter(brand, gender, color, category);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [brand, gender, color, category]);
-  /*   const handleInput = (field) => (event) => {
-    const { value } = event.target;
-    setBrand(field === "brand" ? value.toLowerCase() : brand);
-    setGender(field === "gender" ? value.toLowerCase() : gender);
-
-    const brandForOnfilter = field === "brand" ? value.toLowerCase() : brand;
-    const genderForOnfilter = field === "gender" ? value.toLowerCase() : gender;
-
-
-    onFilter(brandForOnfilter, genderForOnfilter);
- 
-
-  }; */
- 
   
+ 
 
-  const filterBrandsInProductsData = [
-    ...new Set(
-      productJson && productJson.map((item) => item?.brand.toLowerCase())
-    ),
-  ];
   const filterBrandsInPrintData = [
     ...new Set(printData && printData.map((item) => item?.brand.toLowerCase())),
   ];
@@ -61,10 +44,9 @@ const FilterBar = ({
     ),
   ];
 
-  /* 
-  console.log("printDataFilterBar: ", printData); 
- 
-  */
+  
+  
+  
   const reset = () => {
   setBrand('');
   setGender('');
@@ -111,13 +93,15 @@ const FilterBar = ({
                   value={brand}
                   key={index}
                   disabled={
-                    printData.length > 0
-                      ? !filterBrandsInPrintData.includes(brand.toLowerCase())
-                      : printData.length < 1 &&
-                        !filterBrandsInProductsData.includes(
-                          brand.toLowerCase()
-                        )
+                    printData &&
+                    (color === "" || color === "all") &&
+                    (category === "" || category === "all") &&
+                    (gender === "" || gender === "all")
+                      ? false
+                      : !filterBrandsInPrintData.includes(brand.toLowerCase())
                   }
+
+              
                 >
                   {brand}
                 </MenuItem>
@@ -150,10 +134,14 @@ const FilterBar = ({
                   value={category}
                   key={index}
                   disabled={
-                    printData.length > 0 &&
-                    !filterCategoriesInPrintData.includes(
-                      category.toLowerCase()
-                    )
+                    printData &&
+                    (brand === "" || brand === "all") &&
+                    (gender === "" || gender === "all") &&
+                    (color === "" || color === "all")
+                      ? false
+                      : !filterCategoriesInPrintData.includes(
+                          category.toLowerCase()
+                        )
                   }
                 >
                   {category}
@@ -187,8 +175,12 @@ const FilterBar = ({
                   value={gender}
                   key={index}
                   disabled={
-                    printData.length > 0 &&
-                    !filterGendersInPrintData.includes(gender.toLowerCase())
+                    printData &&
+                    (brand === "" || brand === "all") &&
+                    (category === "" || category === "all") &&
+                    (color === "" || color === "all")
+                      ? false
+                      : !filterGendersInPrintData.includes(gender.toLowerCase())
                   }
                 >
                   {gender}
@@ -223,8 +215,13 @@ const FilterBar = ({
                   value={color}
                   key={index}
                   disabled={
-                    printData.length > 0 &&
-                    !filterColorsInPrintData.includes(color.toLowerCase())
+                    printData &&
+                    (brand === "" || brand === "all") &&
+                    (category === "" || category === "all") &&
+                    (gender === "" || gender === "all")
+                      ? false
+                      : printData &&
+                        !filterColorsInPrintData.includes(color.toLowerCase())
                   }
                 >
                   {color}
@@ -234,77 +231,13 @@ const FilterBar = ({
           </FormControl>
         </div>
       </Box>
-      {/*  <div className="col-sm-12 my-2">
-        <label htmlFor="startDate">From</label>
-        <input
-          type="date"
-          className="form-control"
-          id="startDate"
-          onChange={handleInput("from")}
-        />
-      </div>
-      <div className="col-sm-12 my-2">
-        <label htmlFor="endDate">To</label>
-        <input
-          type="date"
-          className="form-control"
-          id="endDate"
-          onChange={handleInput("to")}
-        />
-      </div> */}
+
     </div>
   );
 };
 
 export default FilterBar;
 
-/* -------- Color Select ----------- */
 
-/*  <div className="col-sm-12 my-2">
-         <label htmlFor="gender">All</label>
-         <select
-           className="form-control"
-           id="gender"
-           onChange={handleInput("color")}
-         >
-           <option value="">Select</option>
-           {colors.map((color) => (
-             <option value={color} key={color}>
-               {color}
-             </option>
-           ))}
-         </select>
-       </div>; */
 
-/* -------- Search Description ----------- */
 
-/* <label htmlFor="description">Description</label>
-        <input
-          type="text"
-          className="form-control"
-          id="description"
-          onChange={handleInput("description")}
-        /> */
-
-/*
-                -------- Search Input- Brand ----------- 
-
-        <label htmlFor="brand">Brand</label>
-        <input
-          type="text"
-          className="form-control"
-          id="brand"
-          value={filters.brand}
-          onChange={handleInput("brand")}
-        />
-        */
-
-/*  <TextField
-            fullWidth
-            id="Brand"
-            label="Brand"
-            type="search"
-            value={filters.brand}
-            onChange={handleInput("brand")}
-            margin="dense"
-          /> */

@@ -9,7 +9,7 @@ const PersonItem = ({ item }) => {
         />
         <div className="card-body">
           <h5 className="card-title">
-            {item?.brand} {item?.product_name}
+            {item?.brand} 
           </h5>
           <p className="card-text">{item?.product_description}</p>
           <p className="card-text">{item?.product_sex?.toUpperCase()}</p>
