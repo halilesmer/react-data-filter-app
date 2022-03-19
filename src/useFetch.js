@@ -1,5 +1,4 @@
 import { useState } from "react";
-//import { productJson, genderJson, brandJson } from "./dataJson";
 
 export default function useFetch(baseUrl) {
   const [loading, setLoading] = useState(true);
