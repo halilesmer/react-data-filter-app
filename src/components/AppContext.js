@@ -45,15 +45,15 @@ export function AppProvider(props) {
           return true;
         }
         return brand !== ""
-          ? obj.brand.toLowerCase() === brand.toLocaleLowerCase()
+          ? obj.brand.toLowerCase() === brand.toLowerCase()
           : true;
-      })
+      }) 
       .filter((obj) => {
         if (gender === "all") {
           return obj;
         }
         return gender !== ""
-          ? obj.product_sex.toLowerCase() === gender.toLocaleLowerCase()
+          ? obj.product_sex.toLowerCase() === gender.toLowerCase()
           : true;
       })
       .filter((obj) => {
@@ -61,7 +61,7 @@ export function AppProvider(props) {
           return obj;
         }
         return color !== ""
-          ? obj.primary_color.toLowerCase() === color.toLocaleLowerCase()
+          ? obj.primary_color.toLowerCase() === color.toLowerCase()
           : true;
       })
       .filter((obj) => {
@@ -69,7 +69,7 @@ export function AppProvider(props) {
           return obj;
         }
         return category !== ""
-          ? obj.sub_category.toLowerCase() === category.toLocaleLowerCase()
+          ? obj.sub_category.toLowerCase() === category.toLowerCase()
           : true;
       });
     setPrintData(resultProducts);
@@ -79,6 +79,8 @@ export function AppProvider(props) {
       brand,
       "gender: ",
       gender,
+      'color',
+      color,
       "resultProducts",
       resultProducts
     );
@@ -87,7 +89,7 @@ export function AppProvider(props) {
     
   console.log('printData: ', printData);
     
-    
+
   const filterBrandsInPrintData = [
     ...new Set(printData && printData.map((item) => item?.brand.toLowerCase())),
   ];

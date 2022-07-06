@@ -9,14 +9,13 @@ const SelectsInFilter = () => {
   const gender = app.gender;
   const category = app.category;
   const color = app.color;
-  console.log("app: ", app);
 
   useEffect(() => {
     app.onfilter(brand, gender, color, category);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [brand, gender, color, category]);
  
-  return (
+  return ( 
     <Box sx={{ minWidth: 130 }}>
       {/* -------- brand select ----------- */}
       <div className="col-sm-12 my-2">
